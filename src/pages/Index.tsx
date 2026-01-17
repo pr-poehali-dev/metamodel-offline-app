@@ -170,21 +170,24 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-purple-950/20 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <header className="flex items-center justify-between animate-fade-in">
-          <div>
-            <h1 className="text-4xl font-heading font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-transparent">
-              MetaModel
+    <div className="min-h-screen bg-background relative overflow-hidden p-6">
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#00ffff08_1px,transparent_1px),linear-gradient(to_bottom,#00ffff08_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-fuchsia-500/5"></div>
+      <div className="relative max-w-7xl mx-auto space-y-6">
+        <header className="flex items-center justify-between animate-fade-in border-b-2 border-cyan-500/30 pb-4">
+          <div className="relative">
+            <h1 className="text-5xl font-heading font-black tracking-wider text-cyan-400 cyber-glow relative">
+              <span className="absolute inset-0 text-fuchsia-500 opacity-30 blur-sm">METAMODEL</span>
+              <span className="relative">METAMODEL</span>
             </h1>
-            <p className="text-muted-foreground mt-1">Инструмент осознанной эволюции</p>
+            <p className="text-cyan-300/70 mt-2 tracking-widest text-sm font-medium">// PERSONAL EVOLUTION SYSTEM v2.077</p>
           </div>
           <div className="flex gap-3">
             <Dialog open={isGoalDialogOpen} onOpenChange={setIsGoalDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 transition-all hover:scale-105">
+                <Button className="relative bg-gradient-to-r from-yellow-400 to-yellow-500 text-black hover:from-yellow-500 hover:to-yellow-600 transition-all hover:scale-105 border-2 border-yellow-300 shadow-[0_0_20px_rgba(234,179,8,0.5)] font-bold tracking-wider">
                   <Icon name="Target" className="mr-2" size={20} />
-                  Создать цель
+                  NEW GOAL
                 </Button>
               </DialogTrigger>
               <DialogContent className="bg-card border-border">
@@ -255,9 +258,9 @@ const Index = () => {
             </Dialog>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transition-all hover:scale-105">
+                <Button className="relative bg-gradient-to-r from-cyan-400 to-fuchsia-500 text-black hover:from-cyan-500 hover:to-fuchsia-600 transition-all hover:scale-105 border-2 border-cyan-300 shadow-[0_0_20px_rgba(6,182,212,0.5)] font-bold tracking-wider">
                   <Icon name="Plus" className="mr-2" size={20} />
-                  Создать архетип
+                  NEW ARCHETYPE
                 </Button>
               </DialogTrigger>
             <DialogContent className="bg-card border-border">
@@ -300,22 +303,34 @@ const Index = () => {
         </header>
 
         <Tabs defaultValue="archetypes" className="animate-fade-in">
-          <TabsList className="bg-card border border-border">
-            <TabsTrigger value="archetypes" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500">
+          <TabsList className="bg-card/50 backdrop-blur-sm border-2 border-cyan-500/30 p-1">
+            <TabsTrigger 
+              value="archetypes" 
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-400 data-[state=active]:to-cyan-500 data-[state=active]:text-black data-[state=active]:border-2 data-[state=active]:border-cyan-300 data-[state=active]:shadow-[0_0_15px_rgba(6,182,212,0.5)] font-bold tracking-wider uppercase text-xs"
+            >
               <Icon name="Users" className="mr-2" size={16} />
-              Архетипы
+              ARCHETYPES
             </TabsTrigger>
-            <TabsTrigger value="goals" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500">
+            <TabsTrigger 
+              value="goals" 
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-400 data-[state=active]:to-yellow-500 data-[state=active]:text-black data-[state=active]:border-2 data-[state=active]:border-yellow-300 data-[state=active]:shadow-[0_0_15px_rgba(234,179,8,0.5)] font-bold tracking-wider uppercase text-xs"
+            >
               <Icon name="Target" className="mr-2" size={16} />
-              Цели
+              GOALS
             </TabsTrigger>
-            <TabsTrigger value="analytics" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500">
+            <TabsTrigger 
+              value="analytics" 
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-fuchsia-400 data-[state=active]:to-fuchsia-500 data-[state=active]:text-black data-[state=active]:border-2 data-[state=active]:border-fuchsia-300 data-[state=active]:shadow-[0_0_15px_rgba(217,70,239,0.5)] font-bold tracking-wider uppercase text-xs"
+            >
               <Icon name="BarChart3" className="mr-2" size={16} />
-              Аналитика
+              ANALYTICS
             </TabsTrigger>
-            <TabsTrigger value="timeline" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500">
+            <TabsTrigger 
+              value="timeline" 
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-400 data-[state=active]:to-green-500 data-[state=active]:text-black data-[state=active]:border-2 data-[state=active]:border-green-300 data-[state=active]:shadow-[0_0_15px_rgba(34,197,94,0.5)] font-bold tracking-wider uppercase text-xs"
+            >
               <Icon name="Clock" className="mr-2" size={16} />
-              Хроника
+              TIMELINE
             </TabsTrigger>
           </TabsList>
 
