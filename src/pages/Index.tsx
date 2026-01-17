@@ -137,6 +137,30 @@ const Index = () => {
     setIsGoalDialogOpen(true);
   };
 
+  const handleUpdateGoalProgress = (goalId: string, newProgress: number) => {
+    setGoals(goals.map(g => 
+      g.id === goalId ? { ...g, progress: newProgress } : g
+    ));
+
+    const goal = goals.find(g => g.id === goalId);
+    if (goal) {
+      setArchetypes(archetypes.map(a => 
+        a.id === goal.archetypeId 
+          ? { 
+              ...a, 
+              lastActive: new Date().toISOString().split('T')[0],
+              progress: Math.round(
+                goals
+                  .filter(g => g.archetypeId === a.id)
+                  .reduce((sum, g) => sum + (g.id === goalId ? newProgress : g.progress), 0) / 
+                goals.filter(g => g.archetypeId === a.id).length
+              )
+            }
+          : a
+      ));
+    }
+  };
+
   const getHeatColor = (value: number) => {
     if (value >= 8) return 'bg-purple-500';
     if (value >= 6) return 'bg-pink-500';
@@ -300,7 +324,7 @@ const Index = () => {
           </TabsContent>
 
           <TabsContent value="goals" className="space-y-4 mt-6">
-            <GoalsTab goals={goals} archetypes={archetypes} />
+            <GoalsTab goals={goals} archetypes={archetypes} onUpdateGoalProgress={handleUpdateGoalProgress} />
           </TabsContent>
 
           <TabsContent value="analytics" className="space-y-6 mt-6">
