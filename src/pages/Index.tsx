@@ -2,7 +2,10 @@ import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import Icon from '@/components/ui/icon';
@@ -43,6 +46,11 @@ const Index = () => {
   const [newArchetypeName, setNewArchetypeName] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState('✨');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isGoalDialogOpen, setIsGoalDialogOpen] = useState(false);
+  const [selectedArchetypeForGoal, setSelectedArchetypeForGoal] = useState('');
+  const [newGoalTitle, setNewGoalTitle] = useState('');
+  const [newGoalDeadline, setNewGoalDeadline] = useState('');
+  const [newGoalDescription, setNewGoalDescription] = useState('');
 
   const emojis = ['🎨', '👑', '🔭', '📚', '💪', '🧘', '🎯', '⚡', '🌟', '🔥', '💎', '🚀'];
   const gradients = [
@@ -95,6 +103,38 @@ const Index = () => {
     }
   };
 
+  const handleCreateGoal = () => {
+    if (newGoalTitle.trim() && selectedArchetypeForGoal && newGoalDeadline) {
+      const newGoal: Goal = {
+        id: Date.now().toString(),
+        archetypeId: selectedArchetypeForGoal,
+        title: newGoalTitle,
+        progress: 0,
+        deadline: newGoalDeadline,
+      };
+      setGoals([...goals, newGoal]);
+      
+      setArchetypes(archetypes.map(a => 
+        a.id === selectedArchetypeForGoal 
+          ? { ...a, goals: a.goals + 1, lastActive: new Date().toISOString().split('T')[0] }
+          : a
+      ));
+      
+      setNewGoalTitle('');
+      setNewGoalDeadline('');
+      setNewGoalDescription('');
+      setSelectedArchetypeForGoal('');
+      setIsGoalDialogOpen(false);
+    }
+  };
+
+  const openGoalDialog = (archetypeId?: string) => {
+    if (archetypeId) {
+      setSelectedArchetypeForGoal(archetypeId);
+    }
+    setIsGoalDialogOpen(true);
+  };
+
   const heatmapData = [
     { week: 'Нед 1', days: [3, 5, 2, 8, 6, 4, 1] },
     { week: 'Нед 2', days: [7, 4, 9, 5, 3, 6, 8] },
@@ -120,13 +160,87 @@ const Index = () => {
             </h1>
             <p className="text-muted-foreground mt-1">Инструмент осознанной эволюции</p>
           </div>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transition-all hover:scale-105">
-                <Icon name="Plus" className="mr-2" size={20} />
-                Создать архетип
-              </Button>
-            </DialogTrigger>
+          <div className="flex gap-3">
+            <Dialog open={isGoalDialogOpen} onOpenChange={setIsGoalDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 transition-all hover:scale-105">
+                  <Icon name="Target" className="mr-2" size={20} />
+                  Создать цель
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-card border-border">
+                <DialogHeader>
+                  <DialogTitle className="font-heading">Новая цель</DialogTitle>
+                  <DialogDescription className="text-muted-foreground">
+                    Создайте цель и привяжите её к архетипу для отслеживания прогресса
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 mt-4">
+                  <div>
+                    <Label htmlFor="archetype-select">Архетип</Label>
+                    <Select value={selectedArchetypeForGoal} onValueChange={setSelectedArchetypeForGoal}>
+                      <SelectTrigger id="archetype-select" className="bg-background border-border mt-2">
+                        <SelectValue placeholder="Выберите архетип" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-card border-border">
+                        {archetypes.map((archetype) => (
+                          <SelectItem key={archetype.id} value={archetype.id}>
+                            <span className="flex items-center gap-2">
+                              <span>{archetype.emoji}</span>
+                              <span>{archetype.name}</span>
+                            </span>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="goal-title">Название цели</Label>
+                    <Input
+                      id="goal-title"
+                      placeholder="Например: Написать книгу..."
+                      value={newGoalTitle}
+                      onChange={(e) => setNewGoalTitle(e.target.value)}
+                      className="bg-background border-border mt-2"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="goal-deadline">Дедлайн</Label>
+                    <Input
+                      id="goal-deadline"
+                      type="date"
+                      value={newGoalDeadline}
+                      onChange={(e) => setNewGoalDeadline(e.target.value)}
+                      className="bg-background border-border mt-2"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="goal-description">Описание (опционально)</Label>
+                    <Textarea
+                      id="goal-description"
+                      placeholder="Детали цели..."
+                      value={newGoalDescription}
+                      onChange={(e) => setNewGoalDescription(e.target.value)}
+                      className="bg-background border-border mt-2 min-h-20"
+                    />
+                  </div>
+                  <Button 
+                    onClick={handleCreateGoal} 
+                    className="w-full bg-gradient-to-r from-orange-500 to-red-500"
+                    disabled={!selectedArchetypeForGoal || !newGoalTitle || !newGoalDeadline}
+                  >
+                    Создать цель
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transition-all hover:scale-105">
+                  <Icon name="Plus" className="mr-2" size={20} />
+                  Создать архетип
+                </Button>
+              </DialogTrigger>
             <DialogContent className="bg-card border-border">
               <DialogHeader>
                 <DialogTitle className="font-heading">Новый архетип</DialogTitle>
@@ -212,6 +326,15 @@ const Index = () => {
                       </div>
                       <Progress value={archetype.progress} className="h-2 bg-background/50" />
                     </div>
+                    <Button 
+                      onClick={() => openGoalDialog(archetype.id)}
+                      variant="outline"
+                      size="sm"
+                      className="w-full mt-2 border-border hover:bg-primary/10 hover:text-primary transition-all"
+                    >
+                      <Icon name="Plus" className="mr-1" size={14} />
+                      Добавить цель
+                    </Button>
                   </div>
                 </Card>
               ))}
