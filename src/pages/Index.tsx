@@ -277,6 +277,7 @@ const Index = () => {
               </div>
             </DialogContent>
           </Dialog>
+          </div>
         </header>
 
         <Tabs defaultValue="archetypes" className="animate-fade-in">
